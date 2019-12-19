@@ -48,7 +48,7 @@ public class Main {
 
     public void loadData() {
         try {
-            File file = new File("C:\\Users\\Илья\\Desktop\\test.txt");
+            File file = new File("C:\\Users\\User\\Desktop\\test.txt");
             LineNumberReader lnr = new LineNumberReader(new FileReader(file));
             int num;
             for (num = 0; lnr.readLine() != null; num++) {
