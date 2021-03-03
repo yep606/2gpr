@@ -1,0 +1,23 @@
+{
+  "name": "pup",
+  "version": "1.0.0",
+  "description": "Just pup parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yep606/wifi-analyzer.git"
+  },
+  "author": "yep606",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yep606/wifi-analyzer/issues"
+  },
+  "homepage": "https://github.com/yep606/wifi-analyzer#readme",
+  "dependencies": {
+    "puppeteer": "^8.0.0"
+  }
+}
