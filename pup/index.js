@@ -1,6 +1,7 @@
 // const puppeteer = require('puppeteer');
 import {saveToWorksheet} from './exsaver.js';
 import puppeteer from 'puppeteer'
+
 const url = 'https://2gis.ru/moscow';
 
 async function timeout(ms) {
@@ -81,7 +82,7 @@ async function loadPage(url) {
 }
 
 (async () => {
-    // await saveToWorksheet([{name: "wa", age: 16},{name: "wa", age: 18},{name: "wa", age: 120}]);
-    await loadPage(url);
+    await saveToWorksheet([{name: "wa", age: 16},{name: "wa", age: 18},{name: "wa", age: 120}]);
+    // await loadPage(url);
 })();
 
