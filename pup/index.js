@@ -1,6 +1,6 @@
-const puppeteer = require('puppeteer');
-
-
+// const puppeteer = require('puppeteer');
+import {saveToWorksheet} from './exsaver.js';
+import puppeteer from 'puppeteer'
 const url = 'https://2gis.ru/moscow';
 
 async function timeout(ms) {
@@ -42,7 +42,7 @@ async function loadPage(url) {
         async function collectInfo() {
             let cards = Array.from(document.getElementsByClassName("_y3rccd"));
 
-            
+
             for (const elem of cards) {
                 elem.scrollIntoView();
                 await elem.click();
@@ -72,11 +72,16 @@ async function loadPage(url) {
 
         return result;
     })
-    
+
     console.log("_____________________________________");
     console.log("____________ENDING___________________");
     console.log(final);
+    await saveToWorksheet(final);
 
 }
 
-loadPage(url);
+(async () => {
+    // await saveToWorksheet([{name: "wa", age: 16},{name: "wa", age: 18},{name: "wa", age: 120}]);
+    await loadPage(url);
+})();
+

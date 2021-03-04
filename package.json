@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Just pup parser",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node pup/index.js"
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/yep606/wifi-analyzer#readme",
   "dependencies": {
-    "puppeteer": "^8.0.0"
+    "puppeteer": "^8.0.0",
+    "xlsx": "^0.16.9"
   }
 }
