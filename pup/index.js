@@ -8,7 +8,7 @@ async function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function loadPage(url) {
+async function loadPage(url, subject) {
     const browser = await puppeteer.launch({
         headless: false, // false: enables one to view the Chrome instance in action
         defaultViewport: null, // (optional) useful only in non-headless mode
@@ -16,10 +16,8 @@ async function loadPage(url) {
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2' });
     await page.waitFor('input[placeholder="Поиск в 2ГИС"]');
-    // await page.evaluate(val => document.querySelector(
-    //     'input[placeholder="Поиск в 2ГИС"]').value = val, "школы английского");
     await page.click('input[placeholder="Поиск в 2ГИС"]');
-    await page.type('input[placeholder="Поиск в 2ГИС"]', "Школы английского");
+    await page.type('input[placeholder="Поиск в 2ГИС"]', subject);
     await timeout(5000);
     console.log("HELLO!");
     await page.keyboard.press(String.fromCharCode(13));
@@ -52,12 +50,15 @@ async function loadPage(url) {
                 let name = document.getElementsByClassName("_6vzrncr")[0].textContent;
                 console.log(name);
                 let number = document.querySelectorAll("div[class='_b0ke8'] a[href*='tel:']")[0].href;
+                console.log(number);
                 let findSite = () => {
                     let elems = Array.from(document.querySelectorAll("div[class='_49kxlr'] a[class='_vhuumw']"));
                     return elems[elems.length - 1];
                 };
                 let site = findSite().text;
+                console.log(site);
                 let mail = document.querySelectorAll("div[class='_49kxlr'] a[href*='mailto']")[0].href;
+                console.log(mail);
                 result.push({
                     name,
                     number,
@@ -81,8 +82,12 @@ async function loadPage(url) {
 
 }
 
-(async () => {
-    await saveToWorksheet([{name: "wa", age: 16},{name: "wa", age: 18},{name: "wa", age: 120}]);
-    // await loadPage(url);
-})();
+export async function start(subject) {
+     await loadPage(url, subject);
+};
+
+start("Китайский");
+
+
+
 
