@@ -38,6 +38,36 @@ async function loadPage(url, subject) {
             });
         }
 
+        function findName(){
+            var nodeName = document.getElementsByClassName("_6vzrncr");
+            if(!nodeName.length)
+                return "Name undefined";
+            return nodeName[0].textContent;
+        };
+
+        function findNumber(){
+            var nodeNumber = document.querySelectorAll("div[class='_b0ke8'] a[href*='tel:']");
+            if(!nodeNumber.length)
+                return "Number undefined";
+            
+            return nodeNumber[0].href.slice(4); //num format tel:+74******* -> +74********
+        };
+
+        function findSite(){
+            var nodeSite = document.querySelectorAll("div[class='_49kxlr'] a[class='_vhuumw']");
+            if(!nodeSite.length)
+                return "Site undefined";
+            let sites = Array.from(nodeSite);
+            return sites[sites.length - 1].text;
+        };
+
+        function findMail(){
+            var nodeMail = document.querySelectorAll("div[class='_49kxlr'] a[href*='mailto']");
+            if(!nodeMail.length)
+                return "Mail undefined";
+            return nodeMail[0].href.slice(7);
+        };
+
         async function collectInfo() {
             let cards = Array.from(document.getElementsByClassName("_y3rccd"));
 
@@ -46,19 +76,15 @@ async function loadPage(url, subject) {
                 elem.scrollIntoView();
                 await elem.click();
                 await delay(4000);
+
+                let name, number, site, mail;
+            
                 // СБОР ИНФО
-                let name = document.getElementsByClassName("_6vzrncr")[0].textContent;
-                console.log(name);
-                let number = document.querySelectorAll("div[class='_b0ke8'] a[href*='tel:']")[0].href;
-                console.log(number);
-                let findSite = () => {
-                    let elems = Array.from(document.querySelectorAll("div[class='_49kxlr'] a[class='_vhuumw']"));
-                    return elems[elems.length - 1];
-                };
-                let site = findSite().text;
-                console.log(site);
-                let mail = document.querySelectorAll("div[class='_49kxlr'] a[href*='mailto']")[0].href;
-                console.log(mail);
+                name = findName();
+                number = findNumber();
+                site = findSite();
+                mail = findMail();
+            
                 result.push({
                     name,
                     number,
@@ -67,19 +93,17 @@ async function loadPage(url, subject) {
                 })
                 console.log("clicked!");
             }
-
         }
 
         await collectInfo();
-
         return result;
     })
+
 
     console.log("_____________________________________");
     console.log("____________ENDING___________________");
     console.log(final);
     await saveToWorksheet(final);
-
 }
 
 export async function start(subject) {
