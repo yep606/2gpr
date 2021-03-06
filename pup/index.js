@@ -1,5 +1,4 @@
-// const puppeteer = require('puppeteer');
-import {saveToWorksheet} from './exsaver.js';
+import { saveToWorksheet } from './exsaver.js';
 import puppeteer from 'puppeteer'
 
 const url = 'https://2gis.ru/moscow';
@@ -18,6 +17,7 @@ async function loadPage(url, subject) {
     await page.waitFor('input[placeholder="Поиск в 2ГИС"]');
     await page.click('input[placeholder="Поиск в 2ГИС"]');
     await page.type('input[placeholder="Поиск в 2ГИС"]', subject);
+
     await timeout(5000);
     console.log("HELLO!");
     await page.keyboard.press(String.fromCharCode(13));
@@ -28,8 +28,8 @@ async function loadPage(url, subject) {
     console.log("START!");
 
     const final = await page.evaluate(async () => {
-
         let result = [];
+        let pageNum = 1;
         console.log("start");
 
         function delay(time) {
@@ -38,53 +38,52 @@ async function loadPage(url, subject) {
             });
         }
 
-        function findName(){
+        function findName() {
             var nodeName = document.getElementsByClassName("_6vzrncr");
-            if(!nodeName.length)
+            if (!nodeName.length)
                 return "Name undefined";
             return nodeName[0].textContent;
         };
 
-        function findNumber(){
+        function findNumber() {
             var nodeNumber = document.querySelectorAll("div[class='_b0ke8'] a[href*='tel:']");
-            if(!nodeNumber.length)
+            if (!nodeNumber.length)
                 return "Number undefined";
-            
-            return nodeNumber[0].href.slice(4); //num format tel:+74******* -> +74********
+
+            return nodeNumber[0].href.slice(4); //num format: tel:+74******* -> +74********
         };
 
-        function findSite(){
+        function findSite() {
             var nodeSite = document.querySelectorAll("div[class='_49kxlr'] a[class='_vhuumw']");
-            if(!nodeSite.length)
+            if (!nodeSite.length)
                 return "Site undefined";
             let sites = Array.from(nodeSite);
             return sites[sites.length - 1].text;
         };
 
-        function findMail(){
+        function findMail() {
             var nodeMail = document.querySelectorAll("div[class='_49kxlr'] a[href*='mailto']");
-            if(!nodeMail.length)
+            if (!nodeMail.length)
                 return "Mail undefined";
-            return nodeMail[0].href.slice(7);
+            return nodeMail[0].href.slice(7); //mail format: mailto:***@*** -> ***@***
         };
 
         async function collectInfo() {
             let cards = Array.from(document.getElementsByClassName("_y3rccd"));
-
+            let name, number, site, mail;
 
             for (const elem of cards) {
                 elem.scrollIntoView();
                 await elem.click();
-                await delay(4000);
+                await delay(3000);
 
-                let name, number, site, mail;
-            
                 // СБОР ИНФО
                 name = findName();
+                console.log(name);
                 number = findNumber();
                 site = findSite();
                 mail = findMail();
-            
+
                 result.push({
                     name,
                     number,
@@ -95,22 +94,33 @@ async function loadPage(url, subject) {
             }
         }
 
-        await collectInfo();
+        for (let i = 0; i < 2; i++) {
+            if (pageNum > 1) {
+                let buttons = Array.from(document.getElementsByClassName("_n5hmn94"));
+                buttons[buttons.length - 1].click();
+                await delay(3000);
+                console.log("ВЫПОЛНИЛОСЬ УСЛОВИЕ ПАУЗЫ");
+            }
+            console.log("Current page -> " + pageNum++);
+            await collectInfo();
+
+        }
+
         return result;
     })
-
 
     console.log("_____________________________________");
     console.log("____________ENDING___________________");
     console.log(final);
+    console.log("Собрано элементов: " + final.length)
+    await browser.close();
     await saveToWorksheet(final);
 }
 
 export async function start(subject) {
-     await loadPage(url, subject);
+    await loadPage(url, subject);
 };
 
-start("Китайский");
 
 
 

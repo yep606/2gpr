@@ -8,7 +8,7 @@ import figlet from 'figlet'
 
 console.log(
     chalk.blue(
-      figlet.textSync('data', { horizontalLayout: 'full' })
+      figlet.textSync('T + N = love', { horizontalLayout: 'full' })
     )
   )
 
@@ -17,8 +17,8 @@ program
     .command('parse <name>')
     .alias('p')
     .description('Parse choosen city')
-    .action((name, cmd) => {
-        start(name);
+    .action(async (name, cmd) => {
+        await start(name);
         console.log(
             chalk.green('Parsing done')
         );
