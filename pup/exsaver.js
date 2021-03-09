@@ -11,4 +11,3 @@ export async function saveToWorksheet(array){
 }
 
 
-await saveToWorksheet([{}]);

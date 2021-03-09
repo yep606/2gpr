@@ -1,13 +1,13 @@
 import { saveToWorksheet } from './exsaver.js';
 import puppeteer from 'puppeteer'
 
-const url = 'https://2gis.ru/moscow';
+// const url = 'https://2gis.ru/';
 
 async function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function loadPage(url, subject) {
+async function loadPage(url, subject, num) {
     const browser = await puppeteer.launch({
         headless: false, // false: enables one to view the Chrome instance in action
         defaultViewport: null, // (optional) useful only in non-headless mode
@@ -27,7 +27,7 @@ async function loadPage(url, subject) {
     //СБОР КАРТОЧЕК ОРГАНИЗАЦИЙ
     console.log("START!");
 
-    const final = await page.evaluate(async () => {
+    const final = await page.evaluate(async (num) => {
         let result = [];
         let pageNum = 1;
         console.log("start");
@@ -94,7 +94,7 @@ async function loadPage(url, subject) {
             }
         }
 
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < num; i++) {
             if (pageNum > 1) {
                 let buttons = Array.from(document.getElementsByClassName("_n5hmn94"));
                 buttons[buttons.length - 1].click();
@@ -107,7 +107,7 @@ async function loadPage(url, subject) {
         }
 
         return result;
-    })
+    }, num)
 
     console.log("_____________________________________");
     console.log("____________ENDING___________________");
@@ -117,8 +117,8 @@ async function loadPage(url, subject) {
     await saveToWorksheet(final);
 }
 
-export async function start(subject) {
-    await loadPage(url, subject);
+export async function start(city, subject, num) {
+    await loadPage(`https://2gis.ru/${city}`, subject, num);
 };
 
 
