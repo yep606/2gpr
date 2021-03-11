@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { start } from './index.js'
-import { Command } from 'commander';
+import { Command } from 'commander/esm.mjs';
 import pkg from 'inquirer';
 const { prompt } = pkg;
 const { Separator } = pkg;
