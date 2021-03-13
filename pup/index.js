@@ -1,7 +1,6 @@
 import { saveToWorksheet } from './exsaver.js';
 import puppeteer from 'puppeteer'
 
-// const url = 'https://2gis.ru/';
 
 async function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -19,18 +18,15 @@ async function loadPage(url, subject, num) {
     await page.type('input[placeholder="Поиск в 2ГИС"]', subject);
 
     await timeout(5000);
-    console.log("HELLO!");
     await page.keyboard.press(String.fromCharCode(13));
     await timeout(5000);
-    console.log("done 1 meth");
 
     //СБОР КАРТОЧЕК ОРГАНИЗАЦИЙ
-    console.log("START!");
+    console.log("Collect cards...");
 
     const final = await page.evaluate(async (num) => {
         let result = [];
         let pageNum = 1;
-        console.log("start");
 
         function delay(time) {
             return new Promise(function (resolve) {
@@ -90,7 +86,6 @@ async function loadPage(url, subject, num) {
                     site,
                     mail
                 })
-                console.log("clicked!");
             }
         }
 
@@ -99,19 +94,14 @@ async function loadPage(url, subject, num) {
                 let buttons = Array.from(document.getElementsByClassName("_n5hmn94"));
                 buttons[buttons.length - 1].click();
                 await delay(3000);
-                console.log("ВЫПОЛНИЛОСЬ УСЛОВИЕ ПАУЗЫ");
             }
             console.log("Current page -> " + pageNum++);
             await collectInfo();
 
         }
-
         return result;
     }, num)
 
-    console.log("_____________________________________");
-    console.log("____________ENDING___________________");
-    console.log(final);
     console.log("Собрано элементов: " + final.length)
     await browser.close();
     await saveToWorksheet(final);
